@@ -1,15 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { getTasks, getTasksByCategory } from '../services/taskService';
 
 const TaskList = () => {
     const [tasks, setTasks] = useState([]);
-    const [category, setCategory] = useState(''); // 用於篩選的分類
+    const [category, setCategory] = useState('');
 
-    useEffect(() => {
-        fetchTasks();
-    }, [category]);
-
-    const fetchTasks = async () => {
+    const fetchTasks = useCallback(async () => {
         try {
             if (category) {
                 const response = await getTasksByCategory(category);
@@ -21,7 +17,12 @@ const TaskList = () => {
         } catch (error) {
             console.error('Error fetching tasks:', error);
         }
-    };
+    }, [category]);
+
+    useEffect(() => {
+        fetchTasks();
+    }, [fetchTasks]);  // 現在只依賴 fetchTasks 函數
+
 
     return (
         <div>
