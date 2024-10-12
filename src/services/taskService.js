@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3000/api'; // 設置你的後端 API 地址
+const API_URL = 'https://9d35-36-225-216-224.ngrok-free.app'; // 設置你的後端 API 地址
 
 export const getTasks = () => {
     return axios.get(`${API_URL}/tasks`);
@@ -15,3 +15,6 @@ export const updateTaskStatus = (id, status) => {
 };
 
 // 你還可以添加其他請求，例如搜索、分類、分頁等...
+export const getTasksByCategory = (category) => {
+    return axios.get(`${API_URL}/tasks/category/${category}`);
+};
