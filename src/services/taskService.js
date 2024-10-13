@@ -12,22 +12,43 @@ const axiosInstance = axios.create({
 export const getTasks = async () => {
   try {
     const response = await axiosInstance.get('/tasks');
-    console.log('API Response:', response);
+    console.log('API 完整響應:', response);
     return response;
   } catch (error) {
-    console.error('API Error:', error.response || error);
+    console.error('API 錯誤:', error.response || error);
     throw error;
   }
 };
 
-export const createTask = (taskData) => {
-  return axiosInstance.post('/tasks', taskData);
+export const createTask = async (taskData) => {
+  try {
+    const response = await axiosInstance.post('/tasks', taskData);
+    console.log('創建任務響應:', response);
+    return response;
+  } catch (error) {
+    console.error('創建任務錯誤:', error.response || error);
+    throw error;
+  }
 };
 
-export const updateTaskStatus = (id, status) => {
-  return axiosInstance.put(`/tasks/${id}/status`, { status });
+export const updateTaskStatus = async (id, status) => {
+  try {
+    const response = await axiosInstance.put(`/tasks/${id}/status`, { status });
+    console.log('更新任務狀態響應:', response);
+    return response;
+  } catch (error) {
+    console.error('更新任務狀態錯誤:', error.response || error);
+    throw error;
+  }
 };
 
-export const getTasksByCategory = (category) => {
-  return axiosInstance.get(`/tasks/category/${category}`);
+export const getTasksByCategory = async (category) => {
+  try {
+    const response = await axiosInstance.get(`/tasks/category/${category}`);
+    console.log('按類別獲取任務響應:', response);
+    return response;
+  } catch (error) {
+    console.error('按類別獲取任務錯誤:', error.response || error);
+    throw error;
+  }
 };

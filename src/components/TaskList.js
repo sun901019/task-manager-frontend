@@ -18,12 +18,15 @@ const TaskList = () => {
                 response = await getTasks();
             }
             
-            const fetchedTasks = response.data;
+            console.log('API 響應數據:', response.data);
+            
+            const fetchedTasks = response.data.tasks || response.data;
             
             if (Array.isArray(fetchedTasks)) {
                 setTasks(fetchedTasks);
             } else {
-                throw new Error('返回的數據不是數組');
+                console.error('非數組數據:', fetchedTasks);
+                throw new Error('返回的數據格式不正確');
             }
         } catch (error) {
             console.error('獲取任務時出錯:', error);
