@@ -20,6 +20,10 @@ const TaskList = () => {
             
             console.log('API 響應數據:', response.data);
             
+            if (typeof response.data === 'string' && response.data.startsWith('<!DOCTYPE html>')) {
+                throw new Error('收到 HTML 響應而不是預期的 JSON 數據');
+            }
+            
             const fetchedTasks = response.data.tasks || response.data;
             
             if (Array.isArray(fetchedTasks)) {
