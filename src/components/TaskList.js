@@ -27,7 +27,7 @@ const TaskList = () => {
             }
         } catch (error) {
             console.error('獲取任務時出錯:', error);
-            setError(`獲取任務失敗：${error.message}`);
+            setError(`獲取任務失敗：${error.message || '未知錯誤'}`);
             setTasks([]);
         } finally {
             setLoading(false);
