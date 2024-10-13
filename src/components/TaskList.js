@@ -4,9 +4,13 @@ import { getTasks, getTasksByCategory } from '../services/taskService';
 const TaskList = () => {
     const [tasks, setTasks] = useState([]);
     const [category, setCategory] = useState('');
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     const fetchTasks = useCallback(async () => {
         try {
+            setLoading(true);
+            setError(null);
             let response;
             if (category) {
                 response = await getTasksByCategory(category);
@@ -16,21 +20,31 @@ const TaskList = () => {
             
             const fetchedTasks = response.data;
             
-            // 檢查數據是否為陣列，避免 map 函數出錯
             if (Array.isArray(fetchedTasks)) {
                 setTasks(fetchedTasks);
             } else {
-                console.error('Fetched tasks data is not an array:', fetchedTasks);
-                setTasks([]);  // 如果不是陣列，設置為空陣列以防止出錯
+                throw new Error('返回的數據不是數組');
             }
         } catch (error) {
-            console.error('Error fetching tasks:', error);
+            console.error('獲取任務時出錯:', error);
+            setError(`獲取任務失敗：${error.message}`);
+            setTasks([]);
+        } finally {
+            setLoading(false);
         }
     }, [category]);
 
     useEffect(() => {
         fetchTasks();
     }, [fetchTasks]);
+
+    if (loading) {
+        return <div>加載中...</div>;
+    }
+
+    if (error) {
+        return <div>錯誤: {error}</div>;
+    }
 
     return (
         <div>
@@ -41,13 +55,17 @@ const TaskList = () => {
                 <option value="個人">個人</option>
                 <option value="其他">其他</option>
             </select>
-            <ul>
-                {tasks.map((task) => (
-                    <li key={task.id}>
-                        {task.title} - {task.status}
-                    </li>
-                ))}
-            </ul>
+            {tasks.length === 0 ? (
+                <p>沒有任務</p>
+            ) : (
+                <ul>
+                    {tasks.map((task) => (
+                        <li key={task.id}>
+                            {task.title} - {task.status}
+                        </li>
+                    ))}
+                </ul>
+            )}
         </div>
     );
 };
