@@ -11,31 +11,28 @@ const TaskList = () => {
         try {
             setLoading(true);
             setError(null);
-            let response;
+            let data;
             if (category) {
-                response = await getTasksByCategory(category);
+                data = await getTasksByCategory(category);
             } else {
-                response = await getTasks();
+                data = await getTasks();
             }
             
-            console.log('API 響應數據:', response.data);
+            console.log('獲取的任務數據:', data);
             
-            if (typeof response.data === 'string' && response.data.startsWith('<!DOCTYPE html>')) {
-                throw new Error('收到 HTML 響應而不是預期的 JSON 數據');
-            }
-            
-            const fetchedTasks = response.data.tasks || response.data;
-            
-            if (Array.isArray(fetchedTasks)) {
-                setTasks(fetchedTasks);
+            if (Array.isArray(data)) {
+                setTasks(data);
+            } else if (data && Array.isArray(data.tasks)) {
+                setTasks(data.tasks);
             } else {
-                console.error('非數組數據:', fetchedTasks);
                 throw new Error('返回的數據格式不正確');
             }
+            
         } catch (error) {
             console.error('獲取任務時出錯:', error);
-            setError(`獲取任務失敗：${error.message || '未知錯誤'}`);
+            setError(`獲取任務失敗：${error.response ? error.response.status + ' ' + error.response.statusText : error.message || '未知錯誤'}`);
             setTasks([]);
+        
         } finally {
             setLoading(false);
         }
